@@ -1,0 +1,49 @@
+# Dependências do Node
+node_modules/
+
+# Diretório de build
+dist/
+build/
+
+# Arquivo de variáveis de ambiente
+.env
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Arquivos temporários do sistema
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Arquivos de cobertura de testes
+coverage/
+
+# Arquivos de depuração
+*.pid
+*.seed
+*.pid.lock
+
+# Arquivos de cache
+.cache/
+.nyc_output/
+
+# Pasta de uploads ou temporária (caso exista)
+tmp/
+uploads/
+
+# Pastas de configuração do sistema e editor
+*.sublime-workspace
+*.sublime-project
+
+# Arquivos de saída do sistema operacional
+*.out
+
+# Arquivos do TypeScript (caso use)
+*.tsbuildinfo
