@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const usuarioController = require('./controllers/usuarioController');
+const authMiddleware = require('./middlewares/authMiddleware');
+
 require('dotenv').config();
 
 const app = express();
@@ -21,7 +23,16 @@ app.get('/', (req, res) => {
     res.send('Teste');
 })
 
+app.post('/api/register', usuarioController.register);
 
+app.post('/api/login', usuarioController.login);
+
+
+app.get('/rota-protegida', authMiddleware, (req, res) => {
+    res.send('Acesso concedido à rota protegida');
+});
+
+// app.post('/api/delete', usuarioController.delete);
 
 // Iniciando o servidor
 app.listen(port, () => {

@@ -64,7 +64,44 @@ const fetchUsuarios = async () => {
   }
 };
 
-// Chama a função para carregar os usuários ao carregar a página
-window.onload = fetchUsuarios;
+// // Chama a função para carregar os usuários ao carregar a página
+// window.onload = fetchUsuarios;
 
+function carregaUsuarioBack(){
+  // Obtém o token armazenado no cookie ou localStorage
+  const token = localStorage.getItem('token'); // Exemplo: obtenha o token do armazenamento seguro
 
+  // Configura o cabeçalho Authorization para incluir o token
+  axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+  // Exemplo de requisição GET protegida
+  axios.get('http://localhost:3000/api/usuarios')
+      .then(response => {
+          console.log(response.data);
+      })
+      .catch(error => {
+          console.error('Erro na requisição:', error);
+      });
+  }
+
+  carregaUsuarioBack();
+
+  function rotaProibida(){
+    const novoPost = {
+      title: 'Meu novo post',
+      body: 'Conteúdo do post',
+      userId: 1
+    };
+
+    axios.get('http://localhost:3000/rota-protegida', novoPost, {
+      headers: { 'Authorization': 'Bearer meu_token_jwt' }
+    })
+      .then(response => {
+        console.log('Post criado com token de autenticação:', response.data);
+      })
+      .catch(error => {
+        console.error('Erro ao criar post com autenticação:', error);
+      });
+  }
+
+  rotaProibida()
