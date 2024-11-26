@@ -22,8 +22,12 @@ function validarFormCadast(){
 
 
 function salvarValores(){
-    alert("Salvando...")
-    
+    // alert("Salvando...")
+    let nome = document.getElementById("validationCustom01").value;
+    let email = document.getElementById("validationCustom02").value;
+    let senha = document.getElementById("validationCustomUsername").value;
+    fetchCreateUser(nome, email, senha);
+    alert("Salvo!")
     
 }
 
@@ -47,6 +51,7 @@ const fetchUsuarios = async () => {
   try {
       const response = await fetch('http://localhost:3000/api/usuarios');
       const data = await response.json();
+      
       const tableBody = document.querySelector('#usuarios-table tbody');
       tableBody.innerHTML = ''; // Limpa a tabela antes de preencher
 
@@ -75,33 +80,79 @@ function carregaUsuarioBack(){
   axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
   // Exemplo de requisição GET protegida
-  axios.get('http://localhost:3000/api/usuarios')
+  axios.get('http://localhost:3000/api/login')
       .then(response => {
           console.log(response.data);
+          const token = response.data;
+          localStorage.setItem("token", token);
+          
       })
       .catch(error => {
           console.error('Erro na requisição:', error);
       });
   }
 
-  carregaUsuarioBack();
+  //carregaUsuarioBack();
 
-  function rotaProibida(){
+  async function rotaProibida(){
     const novoPost = {
       title: 'Meu novo post',
       body: 'Conteúdo do post',
       userId: 1
     };
+    
+    const access_token = localStorage.getItem("token");
 
-    axios.get('http://localhost:3000/rota-protegida', novoPost, {
-      headers: { 'Authorization': 'Bearer meu_token_jwt' }
+    await axios.get('http://localhost:3000/rotaprotegida', {
+      headers: { 'Authorization': `Bearer ${access_token}`}
+      
     })
       .then(response => {
         console.log('Post criado com token de autenticação:', response.data);
       })
       .catch(error => {
-        console.error('Erro ao criar post com autenticação:', error);
+        console.error('Erro ao criar post com autenticação:', error.response.data);
       });
   }
+  
+  const fetchDadosProtegidos = async () => {
+    try {
+        const token = obterToken();
 
-  rotaProibida()
+        // Configura o cabeçalho Authorization com o token
+        const resposta = await axios.post('http://localhost:3000/api/protected', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        console.log('Dados recebidos:', resposta.data);
+    } catch (erro) {
+        console.error('Erro ao fazer a requisição:', erro);
+    }
+};
+
+  rotaProibida();
+
+
+
+  const fetchCreateUser = async (nome, email, senha) => {
+    try {
+        const response = await fetch('http://localhost:3000/api/usuarios', 
+          {
+            method:"POST",
+            headers: { 
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({nome, email, senha})
+          }
+        );
+        const data = await response.json();
+        console.log(data);
+        
+    } catch (error) {
+        console.error('Erro ao buscar usuários:', error);
+    }
+  };
+

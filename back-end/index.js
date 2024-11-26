@@ -20,16 +20,17 @@ app.get('/api/usuarios', usuarioController.getAllUsers);
 app.post('/api/usuarios', usuarioController.createUser);
 
 app.get('/', (req, res) => {
-    res.send('Teste');
+    res.send('<h1>Título<\h1>');
 })
 
-app.post('/api/register', usuarioController.register);
+app.post('/api/register', authMiddleware, usuarioController.register);
 
 app.post('/api/login', usuarioController.login);
 
 
-app.get('/rota-protegida', authMiddleware, (req, res) => {
-    res.send('Acesso concedido à rota protegida');
+app.get('/rotaprotegida', authMiddleware, (req, res) => {
+    
+    res.json({user: req.user});
 });
 
 // app.post('/api/delete', usuarioController.delete);
